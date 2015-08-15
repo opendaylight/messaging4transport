@@ -1,0 +1,7 @@
+# Maven
+target/
+
+# OpenDaylight
+yang-gen-config/
+yang-gen-sal/
+
