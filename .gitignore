@@ -2,6 +2,7 @@
 target/
 
 # OpenDaylight
+yang-gen-code/
 yang-gen-config/
 yang-gen-sal/
 
