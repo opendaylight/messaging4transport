@@ -7,16 +7,22 @@ module messaging4transport-impl {
     import opendaylight-md-sal-dom {prefix dom; revision-date 2013-10-28;}
 
     description
-        "Service definition for messaging4transport project";
+        "Service definition for Messaging4Transport project";
 
     revision "2014-12-10" {
         description
             "Initial revision";
     }
 
+    identity messaging-transport {
+        base "config:service-type";
+        config:java-class "org.opendaylight.messaging4transport.api.Messaging4Transport";
+    }
+
     identity messaging4transport {
         base config:module-type;
-        config:java-name-prefix Messaging4transport;
+        config:provided-service messaging-transport;
+        config:java-name-prefix Messaging4Transport;
     }
 
     augment "/config:modules/config:module/config:configuration" {
