@@ -1,4 +1,7 @@
 package org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.messaging4transport.impl.rev141210;
+
+import org.opendaylight.messaging4transport.impl.Messaging4TransportProviderImpl;
+
 public class Messaging4TransportModule extends org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.messaging4transport.impl.rev141210.AbstractMessaging4TransportModule {
     public Messaging4TransportModule(org.opendaylight.controller.config.api.ModuleIdentifier identifier, org.opendaylight.controller.config.api.DependencyResolver dependencyResolver) {
         super(identifier, dependencyResolver);
@@ -15,8 +18,11 @@ public class Messaging4TransportModule extends org.opendaylight.yang.gen.v1.urn.
 
     @Override
     public java.lang.AutoCloseable createInstance() {
-        // TODO:implement
-        throw new java.lang.UnsupportedOperationException();
+        // Create an instance of our provider
+        Messaging4TransportProviderImpl instance = new Messaging4TransportProviderImpl();
+        // Register it with the Broker
+        getDomBrokerDependency().registerProvider(instance);
+        return instance;
     }
 
 }
