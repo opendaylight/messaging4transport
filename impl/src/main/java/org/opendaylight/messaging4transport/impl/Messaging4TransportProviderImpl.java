@@ -14,14 +14,14 @@ import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.RpcRegistr
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Messaging4transportProvider implements BindingAwareProvider, AutoCloseable {
+public class Messaging4TransportProviderImpl implements BindingAwareProvider, AutoCloseable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Messaging4transportProvider.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Messaging4TransportProviderImpl.class);
     private RpcRegistration<Messaging4transportService> messaging4transportService;
 
     @Override
     public void onSessionInitiated(ProviderContext session) {
-        LOG.info("Messaging4transportProvider Session Initiated");
+        LOG.info("Messaging4TransportProviderImpl Session Initiated");
         Publisher.publish();
         messaging4transportService = session.addRpcImplementation(Messaging4transportService.class,
                 new Messaging4TransportImpl());
