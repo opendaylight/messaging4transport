@@ -12,7 +12,6 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
   xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.2.0 http://karaf.apache.org/xmlns/features/v1.2.0">
   <repository>mvn:org.opendaylight.yangtools/features-yangtools/${yangtools.version}/xml/features</repository>
   <repository>mvn:org.opendaylight.controller/features-mdsal/${mdsal.version}/xml/features</repository>
-  <repository>mvn:org.opendaylight.controller/features-restconf/${mdsal.version}/xml/features</repository>
   <feature name='odl-messaging4transport-api' version='${project.version}' description='OpenDaylight :: messaging4transport :: api'>
     <feature version='${yangtools.version}'>odl-yangtools-models</feature>
     <bundle>mvn:org.opendaylight.messaging4transport/messaging4transport-api/${project.version}</bundle>
@@ -21,6 +20,9 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <feature version='${mdsal.version}'>odl-mdsal-broker</feature>
     <feature version='${project.version}'>odl-messaging4transport-api</feature>
     <bundle>mvn:org.opendaylight.messaging4transport/messaging4transport-impl/${project.version}</bundle>
+    <bundle dependency="true">mvn:org.opendaylight.controller/sal-remote/${mdsal.version}</bundle>
+    <bundle dependency="true">mvn:org.opendaylight.yangtools/yang-data-codec-gson/${yangtools.version}</bundle>
+    <bundle dependency="true">mvn:org.opendaylight.yangtools/yang-model-export/${yangtools.version}</bundle>
     <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-jms_1.1_spec/1.1.1</bundle>
     <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-jta_1.1_spec/1.1.1</bundle>
     <bundle dependency="true">wrap:mvn:org.apache.qpid/qpid-amqp-1-0-common/0.24</bundle>
@@ -28,14 +30,4 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <bundle dependency="true">wrap:mvn:org.apache.qpid/qpid-amqp-1-0-client-jms/0.24</bundle>
     <configfile finalname="${configfile.directory}/messaging4transport.xml">mvn:org.opendaylight.messaging4transport/messaging4transport-impl/${project.version}/xml/config</configfile>
   </feature>
-  <feature name='odl-messaging4transport-rest' version='${project.version}' description='OpenDaylight :: messaging4transport :: REST'>
-    <feature version="${project.version}">odl-messaging4transport</feature>
-    <feature version="${mdsal.version}">odl-restconf</feature>
-  </feature>
-  <feature name='odl-messaging4transport-ui' version='${project.version}' description='OpenDaylight :: messaging4transport :: UI'>
-    <feature version="${project.version}">odl-messaging4transport-rest</feature>
-    <feature version="${mdsal.version}">odl-mdsal-apidocs</feature>
-    <feature version="${mdsal.version}">odl-mdsal-xsql</feature>
-  </feature>
-
 </features>
