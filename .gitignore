@@ -1,9 +1,15 @@
 # Maven
 target/
+impl/src/main/config/maven-metadata-local.xml
 
 # OpenDaylight
 yang-gen-code/
 yang-gen-config/
 yang-gen-sal/
 
+# IntelliJ IDEA
 .idea/
+*.iml
+
+# Temporary Files
+.*~
