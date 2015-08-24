@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a79b1b5_2d82d74f",
+        "filename": "karaf/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 9
+      },
+      "writtenOn": "2015-08-24T15:06:58Z",
+      "side": 0,
+      "message": "Don\u0027t delete this, change it to:\n\u003cproperties\u003e\n    \u003ckaraf.localFeature\u003eodl-messaging4transport\u003c/karaf.localFeature\u003e\n  \u003c/properties\u003e",
+      "revId": "8a2abcae4c0ac164c5bd1c2141ce496ac6938027",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    }
+  ]
+}
