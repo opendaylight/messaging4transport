@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a79b1b5_b369648d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 2759
+      },
+      "writtenOn": "2015-08-25T02:57:50Z",
+      "side": 1,
+      "message": "A good commit message should be written in the present tense, imperative style. Starting with a short summary in the first line, blank line and the detailed description if necessary. The messages themselves should be straight to the point without any extra details. This message could have been written as:\n\n Add additional temporary files to .gitignore\n\nSee reference: https://wiki.openstack.org/wiki/GitCommitMessages\n\nHope this helps :)",
+      "revId": "dd17fe421c915eaccbf02a9538671af815619f2a",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    }
+  ]
+}
