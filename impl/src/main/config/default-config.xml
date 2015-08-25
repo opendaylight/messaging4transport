@@ -19,10 +19,10 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
         <module>
           <type xmlns:prefix="urn:opendaylight:params:xml:ns:yang:messaging4transport:impl">prefix:messaging4transport</type>
           <name>messaging4transport-default</name>
-          <broker>
-            <type xmlns:binding="urn:opendaylight:params:xml:ns:yang:controller:md:sal:binding">binding:binding-broker-osgi-registry</type>
-            <name>binding-osgi-broker</name>
-          </broker>
+          <dom-broker>
+              <type xmlns:dom="urn:opendaylight:params:xml:ns:yang:controller:md:sal:dom">dom:dom-broker-osgi-registry</type>
+              <name>dom-broker</name>
+          </dom-broker>
         </module>
       </modules>
     </data>
