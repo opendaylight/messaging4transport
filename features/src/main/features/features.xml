@@ -13,7 +13,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
   <repository>mvn:org.opendaylight.yangtools/features-yangtools/${yangtools.version}/xml/features</repository>
   <repository>mvn:org.opendaylight.controller/features-mdsal/${mdsal.version}/xml/features</repository>
   <feature name='odl-messaging4transport-api' version='${project.version}' description='OpenDaylight :: messaging4transport :: api'>
-    <feature version='${yangtools.version}'>odl-yangtools-models</feature>
+    <feature version='${yangtools.version}'>odl-mdsal-models</feature>
     <bundle>mvn:org.opendaylight.messaging4transport/messaging4transport-api/${project.version}</bundle>
   </feature>
   <feature name='odl-messaging4transport' version='${project.version}' description='OpenDaylight :: messaging4transport'>
