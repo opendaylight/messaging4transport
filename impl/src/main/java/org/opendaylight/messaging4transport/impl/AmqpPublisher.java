@@ -14,16 +14,21 @@ import org.slf4j.LoggerFactory;
 
 import javax.jms.*;
 
-public class Publisher {
-    private static final Logger LOG = LoggerFactory.getLogger(Publisher.class);
+/**
+ * The class that publishes AMQP messages.
+ */
+public class AmqpPublisher {
+    private static final Logger LOG = LoggerFactory.getLogger(AmqpPublisher.class);
 
     /**
      * Publishes the RPC, data tree, and notifications to the given destination/topic.
+     *
+     * @param msg - the message text to be sent
      */
-    public static void publish(){
+    public static void publish(String msg) {
         String destination = Messaging4TransportConstants.AMQP_TOPIC_EVENT_DESTINATION;
         try {
-            publish(destination);
+            publish(destination, msg);
         } catch (JMSException e) {
             LOG.error("JMS Exception in publishing to the AMQP broker", e);
         } catch (InterruptedException e) {
@@ -33,24 +38,39 @@ public class Publisher {
 
     /**
      * Publishes the data to the given destination
+     *
      * @param destination The destination topic
-     * @throws JMSException if sending the data to the broker fails
+     * @param msg         - the message text to be sent
+     * @throws JMSException         if sending the data to the broker fails
      * @throws InterruptedException if interrupted
      */
-    public static void publish(String destination) throws JMSException, InterruptedException {
-        String user = AMQPConfig.getUser();
-        String password = AMQPConfig.getPassword();
-        String host = AMQPConfig.getHost();
-        int port = AMQPConfig.getPort();
+    public static void publish(String destination, String msg) throws JMSException, InterruptedException {
+        String user = AmqpConfig.getUser();
+        String password = AmqpConfig.getPassword();
+        String host = AmqpConfig.getHost();
+        int port = AmqpConfig.getPort();
 
         ConnectionFactoryImpl factory = new ConnectionFactoryImpl(host, port, user, password);
 
         Connection connection = factory.createConnection(user, password);
         connection.start();
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        MessageProducer producer = session.createProducer(AMQPConfig.getDestination(destination));
+        MessageProducer producer = session.createProducer(AmqpConfig.getDestination(destination));
         producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
-        MessageGen.sendMessages(session, producer);
+        sendMessages(session, producer, msg);
+    }
+
+    /**
+     * Generates random messages
+     *
+     * @param session  session
+     * @param producer message producer
+     * @param msgText  the message to be sent in text format.
+     * @throws JMSException if message transfer failed.
+     */
+    public static void sendMessages(Session session, MessageProducer producer, String msgText) throws JMSException {
+        TextMessage msg = session.createTextMessage(msgText);
+        producer.send(msg);
     }
 }

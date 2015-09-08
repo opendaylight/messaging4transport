@@ -6,15 +6,36 @@ module messaging4transport {
     revision "2015-01-05" {
         description "Initial revision of messaging4transport model";
     }
-    rpc messaging-transport {
-        input {
-            leaf name {
+
+    container amqp-user-agents {
+        list amqp-user-agent {
+            key "agent-id";
+
+            leaf agent-id {
+	            type string;
+            }
+
+            leaf host {
                 type string;
             }
-        }
-        output {
-            leaf message {
+
+            leaf port {
+                type int32;
+            }
+
+            leaf username {
                 type string;
+            }
+
+            leaf password {
+                type string;
+            }
+
+            list receiver {
+                key message-id;
+                leaf message-id {
+                    type string;
+                }
             }
         }
     }

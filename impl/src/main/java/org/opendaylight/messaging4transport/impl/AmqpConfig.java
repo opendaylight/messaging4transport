@@ -17,7 +17,7 @@ import javax.jms.Destination;
 /**
  * Configuration class for the AMQP broker
  */
-public class AMQPConfig {
+public class AmqpConfig {
     /**
      * Gets the AMQP broker user name
      * @return username
