@@ -50,15 +50,28 @@ public class AmqpPublisher {
         String host = AmqpConfig.getHost();
         int port = AmqpConfig.getPort();
 
-        ConnectionFactoryImpl factory = new ConnectionFactoryImpl(host, port, user, password);
-
-        Connection connection = factory.createConnection(user, password);
-        connection.start();
-        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        Session session = getAmqpSession(host, port, user, password);
         MessageProducer producer = session.createProducer(AmqpConfig.getDestination(destination));
         producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
         sendMessages(session, producer, msg);
+    }
+
+    /**
+     * Gets the AMQP session to initiate the connection with the broker.
+     * @param host     the host
+     * @param port     the port
+     * @param user     the user name
+     * @param password the password
+     * @return the AMQP session
+     * @throws JMSException if initializing the session failed.
+     */
+    public static Session getAmqpSession(String host, int port, String user, String password) throws JMSException {
+        ConnectionFactoryImpl factory = new ConnectionFactoryImpl(host, port, user, password);
+
+        Connection connection = factory.createConnection(user, password);
+        connection.start();
+        return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
     }
 
     /**
