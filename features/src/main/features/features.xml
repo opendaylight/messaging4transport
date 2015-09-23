@@ -13,16 +13,14 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
   <repository>mvn:org.opendaylight.yangtools/features-yangtools/${yangtools.version}/xml/features</repository>
   <repository>mvn:org.opendaylight.mdsal/features-mdsal/${mdsal.version}/xml/features</repository>
   <repository>mvn:org.opendaylight.mdsal.model/features-mdsal-model/${mdsal.model.version}/xml/features</repository>
-  <repository>mvn:org.opendaylight.controller/features-mdsal/${controller.mdsal.version}/xml/features</repository>
+  <repository>mvn:org.opendaylight.mdsal/features-mdsal/${mdsal.version}/xml/features</repository>
   <feature name='odl-messaging4transport-api' version='${project.version}' description='OpenDaylight :: messaging4transport :: api'>
     <feature version='${yangtools.version}'>odl-mdsal-models</feature>
     <bundle>mvn:org.opendaylight.messaging4transport/messaging4transport-api/${project.version}</bundle>
   </feature>
   <feature name='odl-messaging4transport' version='${project.version}' description='OpenDaylight :: messaging4transport'>
-    <feature version='${controller.mdsal.version}'>odl-mdsal-broker</feature>
     <feature version='${project.version}'>odl-messaging4transport-api</feature>
     <bundle>mvn:org.opendaylight.messaging4transport/messaging4transport-impl/${project.version}</bundle>
-    <bundle dependency="true">mvn:org.opendaylight.controller/sal-remote/${controller.mdsal.version}</bundle>
     <bundle dependency="true">mvn:org.opendaylight.yangtools/yang-data-codec-gson/${yangtools.version}</bundle>
     <bundle dependency="true">mvn:org.opendaylight.yangtools/yang-model-export/${yangtools.version}</bundle>
     <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-jms_1.1_spec/1.1.1</bundle>
@@ -30,6 +28,11 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <bundle dependency="true">wrap:mvn:org.apache.qpid/qpid-amqp-1-0-common/0.24</bundle>
     <bundle dependency="true">wrap:mvn:org.apache.qpid/qpid-amqp-1-0-client/0.24</bundle>
     <bundle dependency="true">wrap:mvn:org.apache.qpid/qpid-amqp-1-0-client-jms/0.24</bundle>
+    <bundle dependency="true">wrap:mvn:org.opendaylight.mdsal/mdsal-common-api/${mdsal.version}</bundle>
+    <bundle dependency="true">wrap:mvn:org.opendaylight.controller/config-api/{{VERSION}}</bundle>
+    <bundle dependency="true">wrap:mvn:org.opendaylight.controller/sal-dom-config/{{VERSION}}</bundle>
+    <bundle dependency="true">wrap:mvn:org.opendaylight.controller/sal-core-api/{{VERSION}}</bundle>
+    <bundle dependency="true">wrap:mvn:org.opendaylight.mdsal/mdsal-dom-api/{{VERSION}}</bundle>
     <configfile finalname="${configfile.directory}/messaging4transport.xml">mvn:org.opendaylight.messaging4transport/messaging4transport-impl/${project.version}/xml/config</configfile>
   </feature>
 </features>
