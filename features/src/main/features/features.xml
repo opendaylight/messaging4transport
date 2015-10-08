@@ -24,7 +24,6 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <feature version='${controller.mdsal.version}'>odl-mdsal-broker</feature>
     <bundle>mvn:org.opendaylight.messaging4transport/messaging4transport-impl/${project.version}</bundle>
     <bundle dependency="true">mvn:org.opendaylight.yangtools/yang-data-codec-gson/${yangtools.version}</bundle>
-    <!--<bundle dependency="true">mvn:org.opendaylight.yangtools/yang-model-export/${yangtools.version}</bundle>-->
     <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-jms_1.1_spec/1.1.1</bundle>
     <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-jta_1.1_spec/1.1.1</bundle>
     <bundle dependency="true">wrap:mvn:org.apache.qpid/qpid-amqp-1-0-common/0.24</bundle>
