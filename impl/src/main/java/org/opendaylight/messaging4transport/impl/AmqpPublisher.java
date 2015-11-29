@@ -7,6 +7,7 @@
  */
 package org.opendaylight.messaging4transport.impl;
 
+import org.apache.qpid.amqp_1_0.client.ConnectionClosedException;
 import org.apache.qpid.amqp_1_0.jms.impl.*;
 import org.opendaylight.messaging4transport.constants.Messaging4TransportConstants;
 import org.slf4j.Logger;
@@ -50,11 +51,15 @@ public class AmqpPublisher {
         String host = AmqpConfig.getHost();
         int port = AmqpConfig.getPort();
 
-        Session session = getAmqpSession(host, port, user, password);
-        MessageProducer producer = session.createProducer(AmqpConfig.getDestination(destination));
-        producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+        try {
+            Session session = getAmqpSession(host, port, user, password);
+            MessageProducer producer = session.createProducer(AmqpConfig.getDestination(destination));
+            producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
-        sendMessages(session, producer, msg);
+            sendMessages(session, producer, msg);
+        } catch (JMSException exception) {
+            LOG.info("Initialize the broker to listen on the host: " + host + ". port: " + port);
+        }
     }
 
     /**
@@ -70,8 +75,12 @@ public class AmqpPublisher {
         ConnectionFactoryImpl factory = new ConnectionFactoryImpl(host, port, user, password);
 
         Connection connection = factory.createConnection(user, password);
-        connection.start();
-        return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        try {
+            connection.start();
+            return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        } catch(javax.jms.JMSException exception) {
+            throw new JMSException("Connection was not initialized at host: "+ host + "and port: "+ port);
+        }
     }
 
     /**
