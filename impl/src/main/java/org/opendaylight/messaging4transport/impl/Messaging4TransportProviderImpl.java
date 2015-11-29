@@ -50,19 +50,23 @@ public class Messaging4TransportProviderImpl implements Provider, DOMNotificatio
     private static QName QNAME;
 
 
-    private final ListenerRegistration<Messaging4TransportProviderImpl> notificationReg;
-    private final ListenerRegistration<Messaging4TransportProviderImpl> configurationReg;
+    private ListenerRegistration<Messaging4TransportProviderImpl> notificationReg;
+    private ListenerRegistration<Messaging4TransportProviderImpl> configurationReg;
 
-    private final Map<ReceiverKey, AmqpReceiverContext> receivers = new HashMap<>();
-    private final InstanceIdentifier<AmqpUserAgent> identifier;
+    private Map<ReceiverKey, AmqpReceiverContext> receivers = new HashMap<>();
+    private InstanceIdentifier<AmqpUserAgent> identifier;
 
-    private static final YangInstanceIdentifier.NodeIdentifier EVENT_SOURCE_ARG =
-            new YangInstanceIdentifier.NodeIdentifier(QName.create(QNAME, "node-id"));
-    private static final YangInstanceIdentifier.NodeIdentifier PAYLOAD_ARG =
-            new YangInstanceIdentifier.NodeIdentifier(QName.create(QNAME, "payload"));
+//    private static final YangInstanceIdentifier.NodeIdentifier EVENT_SOURCE_ARG =
+//            new YangInstanceIdentifier.NodeIdentifier(QName.create(QNAME, "node-id"));
+//    private static final YangInstanceIdentifier.NodeIdentifier PAYLOAD_ARG =
+//            new YangInstanceIdentifier.NodeIdentifier(QName.create(QNAME, "payload"));
 
-    private static final SchemaPath TOPIC_NOTIFICATION_PATH = SchemaPath.create(true, QNAME);
+//    private static final SchemaPath TOPIC_NOTIFICATION_PATH = SchemaPath.create(true, QNAME);
 
+
+    public Messaging4TransportProviderImpl() {
+        LOG.info("Messaging4Transport Provider Initialized");
+    }
 
     private Messaging4TransportProviderImpl(final InstanceIdentifier<AmqpUserAgent> id, final AmqpUserAgent userAgent,
                                             final DOMDataBroker dataBroker,
@@ -83,7 +87,7 @@ public class Messaging4TransportProviderImpl implements Provider, DOMNotificatio
         } catch (final Exception e) {
             throw new IllegalStateException("Unable to connect to the AMQP server", e);
         }
-        notificationReg = notificationService.registerNotificationListener(this, TOPIC_NOTIFICATION_PATH);
+//        notificationReg = notificationService.registerNotificationListener(this, TOPIC_NOTIFICATION_PATH);
 
         final InstanceIdentifier<Receiver> receiverPath = identifier.child(Receiver.class);
 
