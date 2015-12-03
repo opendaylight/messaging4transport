@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5aaae553_5fc1207f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 2759
+      },
+      "writtenOn": "2015-12-03T17:30:57Z",
+      "side": 1,
+      "message": "Not sure why I became the author here but since I didn\u0027t write this patch you should leave the author as yourself :)",
+      "revId": "84bff0058adf59142266a4b37c7bd3143e70751c",
+      "serverId": "7fc14799-209e-464c-9743-7a06c2c21a81",
+      "unresolved": false
+    }
+  ]
+}
