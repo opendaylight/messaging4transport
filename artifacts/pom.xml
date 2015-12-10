@@ -37,6 +37,13 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
+        <artifactId>messaging4transport-impl</artifactId>
+        <version>${project.version}</version>
+        <classifier>config</classifier>
+        <type>xml</type>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
         <artifactId>messaging4transport-features</artifactId>
         <version>${project.version}</version>
         <classifier>features</classifier>
