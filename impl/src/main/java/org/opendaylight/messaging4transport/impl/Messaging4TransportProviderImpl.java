@@ -24,6 +24,7 @@ import org.opendaylight.yangtools.concepts.ListenerRegistration;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.opendaylight.yangtools.yang.common.QName;
 import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier;
+import org.opendaylight.yangtools.yang.data.api.schema.AnyXmlNode;
 import org.opendaylight.yangtools.yang.model.api.SchemaContextListener;
 import org.opendaylight.yangtools.yang.model.api.SchemaPath;
 import org.slf4j.Logger;
@@ -33,6 +34,10 @@ import javax.annotation.Nonnull;
 import javax.jms.DeliveryMode;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import java.io.StringWriter;
 import java.util.Collections;
 import java.util.Collection;
 import java.util.HashMap;
@@ -56,10 +61,10 @@ public class Messaging4TransportProviderImpl implements Provider, DOMNotificatio
     private Map<ReceiverKey, AmqpReceiverContext> receivers = new HashMap<>();
     private InstanceIdentifier<AmqpUserAgent> identifier;
 
-//    private static final YangInstanceIdentifier.NodeIdentifier EVENT_SOURCE_ARG =
-//            new YangInstanceIdentifier.NodeIdentifier(QName.create(QNAME, "node-id"));
-//    private static final YangInstanceIdentifier.NodeIdentifier PAYLOAD_ARG =
-//            new YangInstanceIdentifier.NodeIdentifier(QName.create(QNAME, "payload"));
+    private static final YangInstanceIdentifier.NodeIdentifier EVENT_SOURCE_ARG =
+            new YangInstanceIdentifier.NodeIdentifier(QName.create(QNAME, "node-id"));
+    private static final YangInstanceIdentifier.NodeIdentifier PAYLOAD_ARG =
+            new YangInstanceIdentifier.NodeIdentifier(QName.create(QNAME, "payload"));
 
 //    private static final SchemaPath TOPIC_NOTIFICATION_PATH = SchemaPath.create(true, QNAME);
 
@@ -107,8 +112,8 @@ public class Messaging4TransportProviderImpl implements Provider, DOMNotificatio
      * @return the instance of Messaging4TransportProviderImpl
      */
     static Messaging4TransportProviderImpl create(final InstanceIdentifier<AmqpUserAgent> id,
-                                                         final AmqpUserAgent configuration, final DOMDataBroker dataBroker,
-                                    final DOMNotificationService notificationService) {
+                                                  final AmqpUserAgent configuration, final DOMDataBroker dataBroker,
+                                                  final DOMNotificationService notificationService) {
         return new Messaging4TransportProviderImpl(id,configuration, dataBroker, notificationService);
     }
 
@@ -130,7 +135,29 @@ public class Messaging4TransportProviderImpl implements Provider, DOMNotificatio
     }
 
     @Override
-    public void onNotification(final DOMNotification domNotification) {
+    public void onNotification(final DOMNotification notification) {
+        final String nodeName = notification.getBody().getChild(EVENT_SOURCE_ARG).get().getValue().toString();
+
+        try {
+            final AnyXmlNode encapData = (AnyXmlNode) notification.getBody().getChild(PAYLOAD_ARG).get();
+            final StringWriter writer = new StringWriter();
+            final StreamResult result = new StreamResult(writer);
+            final TransformerFactory tf = TransformerFactory.newInstance();
+            final Transformer transformer = tf.newTransformer();
+            transformer.transform(encapData.getValue(), result);
+            writer.flush();
+            final String message = writer.toString();
+
+
+            synchronized (this) {
+                for (final Map.Entry<ReceiverKey, AmqpReceiverContext> receiver : receivers.entrySet()) {
+                    receiver.getValue().sendMessage(message);
+                }
+            }
+            LOG.info("Published notification for Agent {}: \nNotification {} ", nodeName, message);
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
