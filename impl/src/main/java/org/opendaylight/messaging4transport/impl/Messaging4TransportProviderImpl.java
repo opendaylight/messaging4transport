@@ -7,11 +7,11 @@
  */
 package org.opendaylight.messaging4transport.impl;
 
+import org.opendaylight.mdsal.binding.api.DataObjectModification;
 import org.opendaylight.mdsal.binding.api.DataTreeChangeListener;
 import org.opendaylight.mdsal.binding.api.DataTreeIdentifier;
 import org.opendaylight.mdsal.binding.api.DataTreeModification;
-import org.opendaylight.mdsal.common.api.LogicalDatastoreType;
-import org.opendaylight.mdsal.dom.api.*;
+import org.opendaylight.controller.md.sal.dom.api.*;
 import org.opendaylight.controller.sal.core.api.Broker.ProviderSession;
 import org.opendaylight.controller.sal.core.api.Provider;
 import org.opendaylight.controller.sal.core.api.model.SchemaService;
@@ -26,11 +26,9 @@ import org.opendaylight.yangtools.yang.common.QName;
 import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier;
 import org.opendaylight.yangtools.yang.data.api.schema.AnyXmlNode;
 import org.opendaylight.yangtools.yang.model.api.SchemaContextListener;
-import org.opendaylight.yangtools.yang.model.api.SchemaPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import javax.jms.DeliveryMode;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
@@ -170,8 +168,43 @@ public class Messaging4TransportProviderImpl implements Provider, DOMNotificatio
         }
     }
 
-    @Override
-    public void onDataTreeChanged(@Nonnull Collection<DataTreeModification<Receiver>> dataTreeModifications) {
+    private static ReceiverKey getReceiverKey(final DataTreeIdentifier<Receiver> rootPath) {
+        return rootPath.getRootIdentifier().firstKeyOf(Receiver.class, ReceiverKey.class);
+    }
 
+
+    private synchronized void createOrModifyReceiver(final ReceiverKey receiverKey, final Receiver dataAfter) {
+        final AmqpReceiverContext preexisting = receivers.get(receiverKey);
+        if (preexisting == null) {
+            final AmqpReceiverContext receiver = AmqpReceiverContext.create(receiverKey);
+            LOG.info("Created publishing context for receiver {}", receiverKey);
+            receivers.put(receiverKey, receiver);
+        }
+    }
+
+    private synchronized void removeReceiver(final ReceiverKey receiverKey) {
+        final AmqpReceiverContext receiver = receivers.remove(receiverKey);
+        if (receiver != null) {
+            LOG.debug("Removing receiver {}.", receiverKey.getMessageId());
+            receiver.close();
+        }
+    }
+
+    @Override
+    public void onDataTreeChanged(final Collection<DataTreeModification<Receiver>> changed) {
+
+        for (final DataTreeModification<Receiver> change : changed) {
+            final ReceiverKey receiverKey = getReceiverKey(change.getRootPath());
+            final DataObjectModification<Receiver> rootChange = change.getRootNode();
+            switch (rootChange.getModificationType()) {
+                case WRITE:
+                case SUBTREE_MODIFIED:
+                    createOrModifyReceiver(receiverKey, rootChange.getDataAfter());
+                    break;
+                case DELETE:
+                    removeReceiver(receiverKey);
+                    break;
+            }
+        }
     }
 }
