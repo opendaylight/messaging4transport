@@ -10,13 +10,14 @@ package org.opendaylight.messaging4transport.impl;
 
 import com.google.common.base.Preconditions;
 import org.opendaylight.mdsal.binding.api.DataObjectModification;
+import org.opendaylight.mdsal.common.api.LogicalDatastoreType;
 import org.opendaylight.mdsal.dom.api.*;
 import org.opendaylight.controller.md.sal.dom.api.DOMNotificationService;
 import org.opendaylight.controller.md.sal.dom.api.DOMDataBroker;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.messaging4transport.rev150105.AmqpUserAgents;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.messaging4transport.rev150105.amqp.user.agents.AmqpUserAgent;
 import org.opendaylight.yangtools.concepts.ListenerRegistration;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
+import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier;
 import org.opendaylight.yangtools.yang.data.api.schema.tree.DataTreeCandidate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,10 +30,9 @@ import java.util.Map.Entry;
 public class AmqpUserAgentFactory implements DOMDataTreeChangeListener, AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(AmqpUserAgentFactory.class);
-    private static final InstanceIdentifier<AmqpUserAgent> AGENT_PATH = InstanceIdentifier.create(AmqpUserAgents.class)
-            .child(AmqpUserAgent.class);
-//    private static final DOMDataTreeIdentifier AGENT_CONFIG_PATH = new DOMDataTreeIdentifier(
-//            LogicalDatastoreType.CONFIGURATION, AGENT_PATH); // todo - uncomment.
+    private static final YangInstanceIdentifier AGENT_PATH = YangInstanceIdentifier.create();
+    private static final DOMDataTreeIdentifier AGENT_CONFIG_PATH =
+            new DOMDataTreeIdentifier(LogicalDatastoreType.CONFIGURATION, AGENT_PATH);
 
     private final ListenerRegistration<AmqpUserAgentFactory> amqpAgentsConfigReg;
     private final Map<InstanceIdentifier<AmqpUserAgent>, Messaging4TransportProviderImpl> agents = new HashMap<>();
@@ -43,8 +43,8 @@ public class AmqpUserAgentFactory implements DOMDataTreeChangeListener, AutoClos
         this.dataBroker = Preconditions.checkNotNull(broker, "broker");
         this.notificationService = Preconditions.checkNotNull(domNotification, "domNotification");
 
-        amqpAgentsConfigReg = null; //  broker.registerDataTreeChangeListener(AGENT_CONFIG_PATH, this); 
-        // todo - 1: registerDataTreeChangeListener
+        amqpAgentsConfigReg = null; //  broker.registerDataTreeChangeListener(AGENT_CONFIG_PATH, this);
+        // todo - 1: registerDataChangeListener
         
     }
 

@@ -26,13 +26,18 @@ public class AmqpReceiverContext implements AutoCloseable, Identifiable<Receiver
         return new AmqpReceiverContext(userName);
     }
 
+    /**
+     * Sends message using the AMQP Publisher
+     * @param text message to be sent
+     */
     void sendMessage(final String text) {
-
+        LOG.debug("Sending notification to {} using Messaging4Transport", user);
+        AmqpPublisher.publish(text);
     }
 
     @Override
     public void close() {
-        LOG.info("Closing chat.");
+        LOG.info("Closing Messaging4Transport AMQP Connection.");
     }
 
     @Override
