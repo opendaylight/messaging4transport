@@ -22,6 +22,10 @@ import javax.jms.*;
 public class AmqpListener {
     private static final Logger LOG = LoggerFactory.getLogger(AmqpListener.class);
 
+    private AmqpListener() {
+        throw new AssertionError("Instantiating utility class AmqpListener.");
+    }
+
     public static void main(String[] args) throws JMSException {
         String user = AmqpConfig.getUser();
         String password = AmqpConfig.getPassword();
@@ -33,26 +37,31 @@ public class AmqpListener {
         ConnectionFactoryImpl factory = new ConnectionFactoryImpl(host, port, user, password);
 
         Connection connection = factory.createConnection(user, password);
-        connection.start();
-        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        MessageConsumer consumer = session.createConsumer(AmqpConfig.getDestination(destination));
+        try {
+            connection.start();
+            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            MessageConsumer consumer = session.createConsumer(AmqpConfig.getDestination(destination));
 
-        LOG.info("Waiting for messages...");
-        while (true) {
-            Message msg = consumer.receive();
-            if (msg instanceof TextMessage) {
-                String body = ((TextMessage) msg).getText();
-                System.out.println(body);
-            } else {
-                LOG.error("Unexpected message type: " + msg.getClass());
+            LOG.info("Waiting for messages...");
+            while (true) {
+                Message msg = consumer.receive();
+                if (msg instanceof TextMessage) {
+                    String body = ((TextMessage) msg).getText();
+                    LOG.info(body);
+                } else {
+                    LOG.error("Unexpected message type: " + msg.getClass());
+                }
             }
+        } finally {
+            connection.close();
         }
     }
 
     private static String arg(String[] args, int index, String defaultValue) {
-        if (index < args.length)
+        if (index < args.length) {
             return args[index];
-        else
+        } else {
             return defaultValue;
+        }
     }
 }

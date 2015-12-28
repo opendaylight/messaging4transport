@@ -7,7 +7,6 @@
  */
 package org.opendaylight.messaging4transport.impl;
 
-import org.apache.qpid.amqp_1_0.client.ConnectionClosedException;
 import org.apache.qpid.amqp_1_0.jms.impl.*;
 import org.opendaylight.messaging4transport.constants.Messaging4TransportConstants;
 import org.slf4j.Logger;
@@ -18,8 +17,12 @@ import javax.jms.*;
 /**
  * The class that publishes AMQP messages.
  */
-public class AmqpPublisher {
+public final class AmqpPublisher {
     private static final Logger LOG = LoggerFactory.getLogger(AmqpPublisher.class);
+
+    private AmqpPublisher() {
+        throw new AssertionError("Instantiating utility class AmqpPublisher.");
+    }
 
     /**
      * Publishes the RPC, data tree, and notifications to the given destination/topic.
@@ -58,6 +61,7 @@ public class AmqpPublisher {
 
             sendMessages(session, producer, msg);
         } catch (JMSException exception) {
+            LOG.info("External Broker Not Initialized", exception);
             LOG.info("Initialize the broker to listen on the host: " + host + ". port: " + port);
         }
     }
@@ -79,7 +83,10 @@ public class AmqpPublisher {
             connection.start();
             return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         } catch(javax.jms.JMSException exception) {
+            LOG.info("External Broker Not Initialized", exception);
             throw new JMSException("Connection was not initialized at host: "+ host + "and port: "+ port);
+        } finally {
+            connection.close();
         }
     }
 

@@ -17,6 +17,7 @@ import org.opendaylight.controller.sal.core.api.Broker.ProviderSession;
 import org.opendaylight.controller.sal.core.api.Provider;
 import org.opendaylight.controller.sal.core.api.model.SchemaService;
 import org.opendaylight.messaging4transport.constants.Messaging4TransportConstants;
+import org.opendaylight.messaging4transport.exception.Messaging4TransportException;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.messaging4transport.rev150105.amqp.user.agents.AmqpUserAgent;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.messaging4transport.rev150105.amqp.user.agents.amqp.user.agent.Receiver;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.messaging4transport.rev150105.amqp.user.agents.amqp.user.agent.ReceiverKey;
@@ -51,7 +52,7 @@ public class Messaging4TransportProviderImpl implements Provider, DOMNotificatio
     private static final Logger LOG = LoggerFactory.getLogger(Messaging4TransportProviderImpl.class);
     private ListenerRegistration<SchemaContextListener> listenerRegistration;
 
-    private static QName QNAME;
+    private static QName qName;
 
 
     private ListenerRegistration<Messaging4TransportProviderImpl> notificationReg;
@@ -61,11 +62,11 @@ public class Messaging4TransportProviderImpl implements Provider, DOMNotificatio
     private YangInstanceIdentifier identifier;
 
     private static final YangInstanceIdentifier.NodeIdentifier EVENT_SOURCE_ARG =
-            new YangInstanceIdentifier.NodeIdentifier(QName.create(QNAME, "node-id"));
+            new YangInstanceIdentifier.NodeIdentifier(QName.create(qName, "node-id"));
     private static final YangInstanceIdentifier.NodeIdentifier PAYLOAD_ARG =
-            new YangInstanceIdentifier.NodeIdentifier(QName.create(QNAME, "payload"));
+            new YangInstanceIdentifier.NodeIdentifier(QName.create(qName, "payload"));
 
-    private static final SchemaPath TOPIC_NOTIFICATION_PATH = SchemaPath.create(true, QNAME);
+    private static final SchemaPath TOPIC_NOTIFICATION_PATH = SchemaPath.create(true, qName);
 
     private Messaging4TransportProviderImpl(final YangInstanceIdentifier id, final AmqpUserAgent userAgent,
                                             final DOMDataBroker dataBroker,
@@ -80,8 +81,6 @@ public class Messaging4TransportProviderImpl implements Provider, DOMNotificatio
             MessageProducer producer = session.createProducer(AmqpConfig.getDestination(Messaging4TransportConstants.
                     AMQP_TOPIC_EVENT_DESTINATION));
             producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
-
-//            sendMessages(session, producer, msg);
 
         } catch (final Exception e) {
             throw new IllegalStateException("Unable to connect to the AMQP server", e);
@@ -155,9 +154,8 @@ public class Messaging4TransportProviderImpl implements Provider, DOMNotificatio
             }
             LOG.info("Published notification for Agent {}: \nNotification {} ", nodeName, message);
         } catch (final Exception e) {
-            throw new RuntimeException(e);
+            throw new Messaging4TransportException(e);
         }
-
     }
 
     @Override
@@ -204,6 +202,7 @@ public class Messaging4TransportProviderImpl implements Provider, DOMNotificatio
                     break;
                 case DELETE:
                     removeReceiver(receiverKey);
+                default:
                     break;
             }
         }

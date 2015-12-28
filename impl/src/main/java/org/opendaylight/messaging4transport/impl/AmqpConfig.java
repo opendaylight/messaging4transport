@@ -17,7 +17,12 @@ import javax.jms.Destination;
 /**
  * Configuration class for the AMQP broker
  */
-public class AmqpConfig {
+public final class AmqpConfig {
+
+    private AmqpConfig() {
+        throw new AssertionError("Instantiating utility class AmqpConfig.");
+    }
+
     /**
      * Gets the AMQP broker user name
      * @return username
@@ -58,8 +63,9 @@ public class AmqpConfig {
 
     private static String env(String key, String defaultValue) {
         String rc = System.getenv(key);
-        if (rc == null)
+        if (rc == null) {
             return defaultValue;
+        }
         return rc;
     }
 

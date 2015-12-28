@@ -12,7 +12,7 @@ import org.opendaylight.yangtools.concepts.Identifiable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AmqpReceiverContext implements AutoCloseable, Identifiable<ReceiverKey> {
+public final class AmqpReceiverContext implements AutoCloseable, Identifiable<ReceiverKey> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AmqpReceiverContext.class);
 

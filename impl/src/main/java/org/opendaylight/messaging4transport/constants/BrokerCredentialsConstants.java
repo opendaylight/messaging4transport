@@ -10,11 +10,39 @@ package org.opendaylight.messaging4transport.constants;
 /**
  * Constants of Broker credentials
  */
-public class BrokerCredentialsConstants {
+public final class BrokerCredentialsConstants {
+
+    private BrokerCredentialsConstants() {
+        throw new AssertionError("Instantiating utility class BrokerCredentialsConstants.");
+    }
+
+    /**
+     * Key for the ActiveMQ user in the key, value mapping.
+     */
     public static final String ACTIVEMQ_USER_KEY = "ACTIVEMQ_USER";
+
+    /**
+     * Key for the ActiveMQ password instance in the key, value mapping.
+     */
     public static final String ACTIVEMQ_PASSWORD_KEY = "ACTIVEMQ_PASSWORD";
+
+    /**
+     * Value (default) for the ActiveMQ user in the key, value mapping.
+     */
     public static final String ACTIVEMQ_USER_VALUE = "admin";
+
+    /**
+     * Value (default) for the ActiveMQ password instance in the key, value mapping.
+     */
     public static final String ACTIVEMQ_PASSWORD_VALUE = "password";
+
+    /**
+     * Value (default) for the ActiveMQ (karaf deployment) user in the key, value mapping.
+     */
     public static final String ACTIVEMQ_KARAF_USER_VALUE = "karaf";
+
+    /**
+     * Value (default) for the ActiveMQ (karaf deployment) password in the key, value mapping.
+     */
     public static final String ACTIVEMQ_KARAF_PASSWORD_VALUE = "karaf";
 }
