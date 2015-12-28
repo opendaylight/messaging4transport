@@ -118,8 +118,13 @@ public class Messaging4TransportProviderImpl implements Provider, DOMNotificatio
         LOG.info(initiationSuccessful);
         AmqpPublisher.publish(initiationSuccessful);
 
-//        final DOMDataBroker DOMDataBroker = session.getService(DOMDataBroker.class);  //todo
+        final DOMDataBroker DOMDataBroker = session.getService(DOMDataBroker.class);
         final SchemaService schemaService = session.getService(SchemaService.class);
+
+        listenerRegistration = schemaService.registerSchemaContextListener(ControllerContext.getInstance());
+
+        ControllerContext.getInstance().setSchemas(schemaService.getGlobalContext());
+        ControllerContext.getInstance().setMountService(session.getService(DOMMountPointService.class));
     }
 
 
