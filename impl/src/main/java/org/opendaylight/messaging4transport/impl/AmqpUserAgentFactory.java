@@ -9,6 +9,7 @@
 package org.opendaylight.messaging4transport.impl;
 
 import com.google.common.base.Preconditions;
+import org.opendaylight.controller.md.sal.dom.api.DOMDataChangeListener;
 import org.opendaylight.mdsal.binding.api.DataObjectModification;
 import org.opendaylight.mdsal.common.api.LogicalDatastoreType;
 import org.opendaylight.mdsal.dom.api.*;
@@ -16,7 +17,6 @@ import org.opendaylight.controller.md.sal.dom.api.DOMNotificationService;
 import org.opendaylight.controller.md.sal.dom.api.DOMDataBroker;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.messaging4transport.rev150105.amqp.user.agents.AmqpUserAgent;
 import org.opendaylight.yangtools.concepts.ListenerRegistration;
-import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier;
 import org.opendaylight.yangtools.yang.data.api.schema.tree.DataTreeCandidate;
 import org.slf4j.Logger;
@@ -34,8 +34,8 @@ public class AmqpUserAgentFactory implements DOMDataTreeChangeListener, AutoClos
     private static final DOMDataTreeIdentifier AGENT_CONFIG_PATH =
             new DOMDataTreeIdentifier(LogicalDatastoreType.CONFIGURATION, AGENT_PATH);
 
-    private final ListenerRegistration<AmqpUserAgentFactory> amqpAgentsConfigReg;
-    private final Map<InstanceIdentifier<AmqpUserAgent>, Messaging4TransportProviderImpl> agents = new HashMap<>();
+    private final ListenerRegistration<DOMDataChangeListener> amqpAgentsConfigReg;
+    private final Map<YangInstanceIdentifier, Messaging4TransportProviderImpl> agents = new HashMap<>();
     private final DOMNotificationService notificationService;
     private final DOMDataBroker dataBroker;
 
@@ -49,7 +49,7 @@ public class AmqpUserAgentFactory implements DOMDataTreeChangeListener, AutoClos
     }
 
 
-    private synchronized void removeAndClose(final InstanceIdentifier<AmqpUserAgent> agentKey) {
+    private synchronized void removeAndClose(final YangInstanceIdentifier agentKey) {
         LOG.info("Removing agent {}", agentKey);
         final Messaging4TransportProviderImpl removed = agents.remove(agentKey);
         if (removed != null) {
@@ -60,7 +60,7 @@ public class AmqpUserAgentFactory implements DOMDataTreeChangeListener, AutoClos
     }
 
 
-    private synchronized void createOrReplace(final InstanceIdentifier<AmqpUserAgent> agentKey,
+    private synchronized void createOrReplace(final YangInstanceIdentifier agentKey,
             final AmqpUserAgent configuration) {
         LOG.info("Going to create / replace agent {}", agentKey);
         final Messaging4TransportProviderImpl previous = agents.get(agentKey);
@@ -80,7 +80,7 @@ public class AmqpUserAgentFactory implements DOMDataTreeChangeListener, AutoClos
     @Override
     public synchronized void close() throws Exception {
         amqpAgentsConfigReg.close();
-        for (final Entry<InstanceIdentifier<AmqpUserAgent>, Messaging4TransportProviderImpl> agent : agents.entrySet()) {
+        for (final Entry<YangInstanceIdentifier, Messaging4TransportProviderImpl> agent : agents.entrySet()) {
             agent.getValue().close();
         }
     }
@@ -88,8 +88,8 @@ public class AmqpUserAgentFactory implements DOMDataTreeChangeListener, AutoClos
     @Override
     public void onDataTreeChanged(final Collection<DataTreeCandidate> dataTreeCandidates) {
         for (final DataTreeCandidate dataTreeCandidate : dataTreeCandidates) {
-            final InstanceIdentifier<AmqpUserAgent> agentKey = null; //dataTreeCandidate.getRootPath(); //todo - remove null
-            final DataObjectModification<AmqpUserAgent> changeDiff = null; //dataTreeCandidate.getRootNode(); // todo - remove null
+            final YangInstanceIdentifier agentKey = dataTreeCandidate.getRootPath();
+            final DataObjectModification<AmqpUserAgent> changeDiff = null; // todo - remove null
             switch (changeDiff.getModificationType()) {
                 case WRITE:
                     createOrReplace(agentKey, changeDiff.getDataAfter());

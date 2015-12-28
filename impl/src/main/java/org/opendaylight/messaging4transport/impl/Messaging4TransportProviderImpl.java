@@ -7,6 +7,7 @@
  */
 package org.opendaylight.messaging4transport.impl;
 
+import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.mdsal.binding.api.DataObjectModification;
 import org.opendaylight.mdsal.binding.api.DataTreeChangeListener;
 import org.opendaylight.mdsal.binding.api.DataTreeIdentifier;
@@ -21,11 +22,11 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.messagin
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.messaging4transport.rev150105.amqp.user.agents.amqp.user.agent.ReceiverKey;
 
 import org.opendaylight.yangtools.concepts.ListenerRegistration;
-import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.opendaylight.yangtools.yang.common.QName;
 import org.opendaylight.yangtools.yang.data.api.YangInstanceIdentifier;
 import org.opendaylight.yangtools.yang.data.api.schema.AnyXmlNode;
 import org.opendaylight.yangtools.yang.model.api.SchemaContextListener;
+import org.opendaylight.yangtools.yang.model.api.SchemaPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,21 +58,16 @@ public class Messaging4TransportProviderImpl implements Provider, DOMNotificatio
     private ListenerRegistration<Messaging4TransportProviderImpl> configurationReg;
 
     private Map<ReceiverKey, AmqpReceiverContext> receivers = new HashMap<>();
-    private InstanceIdentifier<AmqpUserAgent> identifier;
+    private YangInstanceIdentifier identifier;
 
     private static final YangInstanceIdentifier.NodeIdentifier EVENT_SOURCE_ARG =
             new YangInstanceIdentifier.NodeIdentifier(QName.create(QNAME, "node-id"));
     private static final YangInstanceIdentifier.NodeIdentifier PAYLOAD_ARG =
             new YangInstanceIdentifier.NodeIdentifier(QName.create(QNAME, "payload"));
 
-//    private static final SchemaPath TOPIC_NOTIFICATION_PATH = SchemaPath.create(true, QNAME);
+    private static final SchemaPath TOPIC_NOTIFICATION_PATH = SchemaPath.create(true, QNAME);
 
-
-    public Messaging4TransportProviderImpl() {
-        LOG.info("Messaging4Transport Provider Initialized");
-    }
-
-    private Messaging4TransportProviderImpl(final InstanceIdentifier<AmqpUserAgent> id, final AmqpUserAgent userAgent,
+    private Messaging4TransportProviderImpl(final YangInstanceIdentifier id, final AmqpUserAgent userAgent,
                                             final DOMDataBroker dataBroker,
                                             final DOMNotificationService notificationService) {
         identifier = id;
@@ -90,14 +86,14 @@ public class Messaging4TransportProviderImpl implements Provider, DOMNotificatio
         } catch (final Exception e) {
             throw new IllegalStateException("Unable to connect to the AMQP server", e);
         }
-//        notificationReg = notificationService.registerNotificationListener(this, TOPIC_NOTIFICATION_PATH);
+        notificationReg = notificationService.registerNotificationListener(this, TOPIC_NOTIFICATION_PATH);
 
-        final InstanceIdentifier<Receiver> receiverPath = identifier.child(Receiver.class);
+        final YangInstanceIdentifier receiverPath = identifier;
 
-//        final DOMDataTreeIdentifier receiverConfigPath =
-//                new DOMDataTreeIdentifier(LogicalDatastoreType.CONFIGURATION, receiverPath); // todo - uncomment
-        configurationReg = null; //dataBroker.registerDataTreeChangeListener(receiverConfigPath, this);  
-// todo - 2: registerDataTreeChangeListener
+        final DOMDataTreeIdentifier receiverConfigPath =
+                new DOMDataTreeIdentifier(LogicalDatastoreType.CONFIGURATION, receiverPath);
+//        configurationReg = dataBroker.registerDataChangeListener(); //receiverConfigPath, this);
+// todo: registerDataTreeChangeListener
         LOG.info("AMQP user agent initialized. id: {}", id);
     }
 
@@ -109,7 +105,7 @@ public class Messaging4TransportProviderImpl implements Provider, DOMNotificatio
      * @param notificationService the notification service
      * @return the instance of Messaging4TransportProviderImpl
      */
-    static Messaging4TransportProviderImpl create(final InstanceIdentifier<AmqpUserAgent> id,
+    static Messaging4TransportProviderImpl create(final YangInstanceIdentifier id,
                                                   final AmqpUserAgent configuration, final DOMDataBroker dataBroker,
                                                   final DOMNotificationService notificationService) {
         return new Messaging4TransportProviderImpl(id,configuration, dataBroker, notificationService);
