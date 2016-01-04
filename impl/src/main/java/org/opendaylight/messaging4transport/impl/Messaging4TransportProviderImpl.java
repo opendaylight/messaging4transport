@@ -46,7 +46,7 @@ import java.util.Map;
 /**
  * Implementation of the Messaging4Transport Provider.
  */
-public class Messaging4TransportProviderImpl implements Provider, DOMNotificationListener, AutoCloseable,
+public final class Messaging4TransportProviderImpl implements Provider, DOMNotificationListener, AutoCloseable,
         DataTreeChangeListener<Receiver> {
 
     private static final Logger LOG = LoggerFactory.getLogger(Messaging4TransportProviderImpl.class);
@@ -117,7 +117,7 @@ public class Messaging4TransportProviderImpl implements Provider, DOMNotificatio
         LOG.info(initiationSuccessful);
         AmqpPublisher.publish(initiationSuccessful);
 
-        final DOMDataBroker DOMDataBroker = session.getService(DOMDataBroker.class);
+        final DOMDataBroker domDataBroker = session.getService(DOMDataBroker.class);
         final SchemaService schemaService = session.getService(SchemaService.class);
 
         listenerRegistration = schemaService.registerSchemaContextListener(ControllerContext.getInstance());

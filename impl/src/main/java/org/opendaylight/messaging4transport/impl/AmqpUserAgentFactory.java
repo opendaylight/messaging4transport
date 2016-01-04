@@ -89,7 +89,8 @@ public class AmqpUserAgentFactory implements DOMDataTreeChangeListener, AutoClos
     public void onDataTreeChanged(final Collection<DataTreeCandidate> dataTreeCandidates) {
         for (final DataTreeCandidate dataTreeCandidate : dataTreeCandidates) {
             final YangInstanceIdentifier agentKey = dataTreeCandidate.getRootPath();
-            final DataObjectModification<AmqpUserAgent> changeDiff = null; // todo - remove null
+            final DataObjectModification<AmqpUserAgent> changeDiff = null;
+            // todo - remove null; and initialize
             switch (changeDiff.getModificationType()) {
                 case WRITE:
                     createOrReplace(agentKey, changeDiff.getDataAfter());

@@ -19,7 +19,7 @@ import javax.jms.*;
 /**
  * Sample AmqpListener Implementation.
  */
-public class AmqpListener {
+public final class AmqpListener {
     private static final Logger LOG = LoggerFactory.getLogger(AmqpListener.class);
 
     private AmqpListener() {

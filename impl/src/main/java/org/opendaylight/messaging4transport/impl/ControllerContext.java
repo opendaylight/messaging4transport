@@ -26,10 +26,10 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * ControllerContext Singleton Class for Messaging4Transport. Code initially borrowed from NetConf.
  */
-public class ControllerContext  implements SchemaContextListener {
-    private final static Logger LOG = LoggerFactory.getLogger(ControllerContext.class);
+public final class ControllerContext  implements SchemaContextListener {
+    private static final Logger LOG = LoggerFactory.getLogger(ControllerContext.class);
 
-    private final static ControllerContext INSTANCE = new ControllerContext();
+    private static final ControllerContext INSTANCE = new ControllerContext();
 
     private final AtomicReference<Map<QName, RpcDefinition>> qnameToRpc =
             new AtomicReference<>(Collections.<QName, RpcDefinition>emptyMap());
@@ -43,6 +43,9 @@ public class ControllerContext  implements SchemaContextListener {
     }
 
     public static ControllerContext getInstance() {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Get the controller context instance");
+        }
         return ControllerContext.INSTANCE;
     }
 
