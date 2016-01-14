@@ -53,6 +53,14 @@ public final class AmqpConfig {
     }
 
     /**
+     * Gets the AMQP broker connection uri.
+     * @return connection uri.
+     */
+    public static String getConnectionURI() {
+        return env(Messaging4TransportConstants.CONNECTION_URI_KEY, Messaging4TransportConstants.CONNECTION_URI_VALUE);
+    }
+
+    /**
      * Gets the AMQP broker deployment port
      * @return port
      */

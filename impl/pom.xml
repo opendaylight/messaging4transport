@@ -44,6 +44,18 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
 
         <!--AMQP Dependencies-->
         <dependency>
+            <groupId>org.apache.qpid</groupId>
+            <artifactId>qpid-jms-client</artifactId>
+            <version>0.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.qpid</groupId>
+            <artifactId>proton-j</artifactId>
+            <version>0.11.1</version>
+        </dependency>
+
+        <!--Older AMQP Dependencies-->
+        <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-jms_1.1_spec</artifactId>
             <version>1.1.1</version>

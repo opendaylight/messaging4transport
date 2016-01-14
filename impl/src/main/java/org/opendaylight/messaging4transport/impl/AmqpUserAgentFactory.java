@@ -43,6 +43,10 @@ public class AmqpUserAgentFactory implements DOMDataTreeChangeListener, AutoClos
         this.dataBroker = Preconditions.checkNotNull(broker, "broker");
         this.notificationService = Preconditions.checkNotNull(domNotification, "domNotification");
 
+        if (LOG.isDebugEnabled()) {
+            AmqpPublisher.publish("Messaging4Transport Initiation with External Broker Successful");
+        }
+
         amqpAgentsConfigReg = null;
         //  broker.registerDataTreeChangeListener(AGENT_CONFIG_PATH, this);
         // todo - 1: registerDataChangeListener
