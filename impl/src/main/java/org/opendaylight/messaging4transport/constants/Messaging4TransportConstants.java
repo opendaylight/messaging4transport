@@ -51,15 +51,5 @@ public final class Messaging4TransportConstants {
      * AMQP default topic prefix.
      */
     public static final String AMQP_TOPIC_PREFIX = "topic://";
-
-    /**
-     * AMQP Connection URI Key.
-     */
-    public static final String CONNECTION_URI_KEY = "ACTIVEMQ_CONNECTION_URI";
-
-    /**
-     * AMQP Connection URI Value.
-     */
-    public static final String CONNECTION_URI_VALUE = "amqp://" + ACTIVEMQ_HOST_VALUE + ":" + ACTIVEMQ_PORT_VALUE;
 }
 

@@ -87,6 +87,7 @@ public class AmqpUserAgentFactory implements DOMDataTreeChangeListener, AutoClos
         for (final Entry<YangInstanceIdentifier, Messaging4TransportProviderImpl> agent : agents.entrySet()) {
             agent.getValue().close();
         }
+        AmqpPublisher.closeConnection();
     }
 
     @Override
