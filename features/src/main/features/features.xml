@@ -30,8 +30,6 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <bundle dependency="true">wrap:mvn:org.apache.qpid/qpid-amqp-1-0-common/{{VERSION}}</bundle>
     <bundle dependency="true">wrap:mvn:org.apache.qpid/qpid-amqp-1-0-client/{{VERSION}}</bundle>
     <bundle dependency="true">wrap:mvn:org.apache.qpid/qpid-amqp-1-0-client-jms/{{VERSION}}</bundle>
-    <bundle dependency="true">wrap:mvn:org.apache.qpid/qpid-jms-client/{{VERSION}}</bundle>
-    <bundle dependency="true">wrap:mvn:org.apache.qpid/proton-j/{{VERSION}}</bundle>
     <configfile finalname="${configfile.directory}/messaging4transport.xml">mvn:org.opendaylight.messaging4transport/messaging4transport-impl/{{VERSION}}/xml/config</configfile>
   </feature>
 </features>
