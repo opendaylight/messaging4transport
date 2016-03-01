@@ -24,6 +24,14 @@ public final class AmqpConfig {
     }
 
     /**
+     * Gets the AMQP destination
+     * @return destination
+     */
+    public static String getDestination() {
+        return env(Messaging4TransportConstants.AMQP_DESTINATION_KEY, Messaging4TransportConstants.AMQP_DESTINATION_VALUE);
+    }
+
+    /**
      * Gets the AMQP broker user name
      * @return username
      */
@@ -74,7 +82,7 @@ public final class AmqpConfig {
      * @param destination the destination string
      * @return the Destination object
      */
-    public static Destination getDestination(String destination) {
+    public static Destination getJmsDestination(String destination) {
         Destination dest;
         if (destination.startsWith(Messaging4TransportConstants.AMQP_TOPIC_PREFIX)) {
             dest = new TopicImpl(destination);

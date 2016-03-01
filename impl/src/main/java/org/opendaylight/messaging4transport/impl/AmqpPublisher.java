@@ -8,7 +8,6 @@
 package org.opendaylight.messaging4transport.impl;
 
 import org.apache.qpid.amqp_1_0.jms.impl.*;
-import org.opendaylight.messaging4transport.constants.Messaging4TransportConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,9 +30,8 @@ public final class AmqpPublisher {
      * @param msg - the message text to be sent
      */
     public static void publish(String msg) {
-        String destination = Messaging4TransportConstants.AMQP_TOPIC_EVENT_DESTINATION;
         try {
-            publish(destination, msg);
+            publish(AmqpConfig.getDestination(), msg);
         } catch (JMSException e) {
             LOG.error("JMS Exception in publishing to the AMQP broker", e);
         } catch (InterruptedException e) {
@@ -57,7 +55,7 @@ public final class AmqpPublisher {
 
         try {
             Session session = getAmqpSession(host, port, user, password);
-            MessageProducer producer = session.createProducer(AmqpConfig.getDestination(destination));
+            MessageProducer producer = session.createProducer(AmqpConfig.getJmsDestination(destination));
             producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
             sendMessages(session, producer, msg);

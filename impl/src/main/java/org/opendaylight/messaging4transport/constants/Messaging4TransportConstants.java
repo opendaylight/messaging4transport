@@ -23,9 +23,14 @@ public final class Messaging4TransportConstants {
     public static final boolean IS_KARAF_BASED = false;
 
     /**
+     * AMQP Destination key in the key, value mapping.
+     */
+    public static final String AMQP_DESTINATION_KEY = "AMQP_DEST";
+
+    /**
      * Default topic event destination for AMQP
      */
-    public static final String AMQP_TOPIC_EVENT_DESTINATION = "topic://event";
+    public static final String AMQP_DESTINATION_VALUE = "topic://event";
 
     /**
      * ActiveMQ Host key in the key, value mapping.

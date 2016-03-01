@@ -16,7 +16,6 @@ import org.opendaylight.controller.md.sal.dom.api.*;
 import org.opendaylight.controller.sal.core.api.Broker.ProviderSession;
 import org.opendaylight.controller.sal.core.api.Provider;
 import org.opendaylight.controller.sal.core.api.model.SchemaService;
-import org.opendaylight.messaging4transport.constants.Messaging4TransportConstants;
 import org.opendaylight.messaging4transport.exception.Messaging4TransportException;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.messaging4transport.rev150105.amqp.user.agents.AmqpUserAgent;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.messaging4transport.rev150105.amqp.user.agents.amqp.user.agent.Receiver;
@@ -78,8 +77,8 @@ public final class Messaging4TransportProviderImpl implements Provider, DOMNotif
             Session session = AmqpPublisher.getAmqpSession(userAgent.getHost(), userAgent.getPort(),
                     userAgent.getUsername(), userAgent.getPassword());
 
-            MessageProducer producer = session.createProducer(AmqpConfig.getDestination(Messaging4TransportConstants.
-                    AMQP_TOPIC_EVENT_DESTINATION));
+            MessageProducer producer = session.createProducer(AmqpConfig.getJmsDestination(
+                    AmqpConfig.getDestination()));
             producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
         } catch (final Exception e) {

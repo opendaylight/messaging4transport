@@ -9,7 +9,6 @@ package org.opendaylight.messaging4transport.sample;
 
 
 import org.apache.qpid.amqp_1_0.jms.impl.*;
-import org.opendaylight.messaging4transport.constants.Messaging4TransportConstants;
 import org.opendaylight.messaging4transport.impl.AmqpConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +31,7 @@ public final class AmqpListener {
         String host = AmqpConfig.getHost();
         int port = AmqpConfig.getPort();
 
-        String destination = arg(args, 0, Messaging4TransportConstants.AMQP_TOPIC_EVENT_DESTINATION);
+        String destination = arg(args, 0, AmqpConfig.getDestination());
 
         ConnectionFactoryImpl factory = new ConnectionFactoryImpl(host, port, user, password);
 
@@ -40,7 +39,7 @@ public final class AmqpListener {
         try {
             connection.start();
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            MessageConsumer consumer = session.createConsumer(AmqpConfig.getDestination(destination));
+            MessageConsumer consumer = session.createConsumer(AmqpConfig.getJmsDestination(destination));
 
             LOG.info("Waiting for messages...");
             while (true) {
